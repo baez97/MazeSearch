@@ -75,10 +75,42 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         return new MazeState(initialPosition, initialCheeses, initialCats);
     }
 
+    /**
+     * Obtiene el estado resultante de aplicar una acción a un estado
+     * @param state MazeState al que se le aplica la acción
+     * @param action Action que se aplica
+     * @return nuevo MazeState resultante de aplicar la acción
+     */
     @Override
     public State applyAction(State state, Action action) {
-        // TODO Auto-generated method stub
-        return null;
+        MazeState  mazeState  = (MazeState)  state;
+        MazeAction mazeAction = (MazeAction) action;
+        int num_cheese, num_cats;
+        Position position;
+        
+        num_cheese = mazeState.num_cheese;
+        num_cats   = mazeState.num_cats;
+        position   = mazeState.position;        
+        
+        switch( mazeAction ) {
+            case UP:
+                position = new Position(position.x, position.y +1);
+                break;
+            case DOWN:
+                position = new Position(position.x, position.y -1);
+                break;
+            case RIGHT:
+                position = new Position(position.x +1, position.y);
+                break;
+            case LEFT:
+                position = new Position(position.x -1, position.y);
+                break;
+            case EAT:
+                num_cheese++;
+                break;
+        }
+        
+        return new MazeState(position, num_cheese, num_cats);
     }
 
     @Override
