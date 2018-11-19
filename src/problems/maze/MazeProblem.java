@@ -69,12 +69,13 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
     @Override
     public State initialState() {
         Position initialPosition;
-        int initialCheeses, initialCats;
+        int initialCats;
+        Set<Position> initialCheese;
         initialPosition = this.maze.input();
-        initialCheeses  = 0;
+        initialCheese   = new HashSet<>();
         initialCats     = 0;
         
-        return new MazeState(initialPosition, initialCheeses, initialCats);
+        return new MazeState(initialPosition, initialCheese, initialCats);
     }
 
     /**
@@ -87,12 +88,13 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
     public State applyAction(State state, Action action) {
         MazeState  mazeState  = (MazeState)  state;
         MazeAction mazeAction = (MazeAction) action;
-        int num_cheese, num_cats;
+        Set<Position> eatenCheese; 
+        int numCats;
         Position position;
         
-        num_cheese = mazeState.num_cheese;
-        num_cats   = mazeState.num_cats;
-        position   = mazeState.position;        
+        eatenCheese = mazeState.eatenCheese;
+        numCats     = mazeState.numCats;
+        position    = mazeState.position;        
         
         switch( mazeAction ) {
             case UP:
@@ -108,15 +110,15 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
                 position = new Position(position.x -1, position.y);
                 break;
             case EAT:
-                num_cheese++;
+                eatenCheese.add(position);
                 break;
         }
         
         if ( this.maze.containsCat(position) ) {
-            num_cats++;
+            numCats++;
         }
         
-        return new MazeState(position, num_cheese, num_cats);
+        return new MazeState(position, eatenCheese, numCats);
     }
 
     /**
@@ -135,7 +137,7 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         Position currentPosition = mazeState.position;
         ArrayList<Action> actions = new ArrayList<>();
         
-        if ( mazeState.num_cats < 2 ) {
+        if ( mazeState.numCats < 2 ) {
             Set<Position> positions = this.maze.reachablePositions(currentPosition);
             positions.forEach((p) -> {
                 if ( p.x > currentPosition.x ) {
@@ -172,10 +174,7 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         double cost = 1.0;
         MazeState mazeState = (MazeState) state;
         
-        if ( mazeState.num_cats == 1 && action != MazeAction.EAT) {
-            cost++;
-        }
-        
+               
         return cost;
     }
 
@@ -197,7 +196,7 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
 
     @Override
     public double heuristic(State state) {
-        // TODO Auto-generated method stub
+        
         return 0;
     }
 
