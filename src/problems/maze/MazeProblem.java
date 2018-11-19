@@ -70,7 +70,7 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
     public State initialState() {
         Position initialPosition;
         int initialCheeses, initialCats;
-        initialPosition = new Position(0,0);
+        initialPosition = this.maze.input();
         initialCheeses  = 0;
         initialCats     = 0;
         
@@ -181,7 +181,9 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
 
     @Override
     public boolean testGoal(State chosen) {
-        // TODO Auto-generated method stub
+        MazeState mazeState = (MazeState) chosen;
+        
+                
         return false;
     }
 
