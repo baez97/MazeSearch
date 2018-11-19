@@ -112,6 +112,10 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
                 break;
         }
         
+        if ( this.maze.containsCat(position) ) {
+            num_cats++;
+        }
+        
         return new MazeState(position, num_cheese, num_cats);
     }
 
