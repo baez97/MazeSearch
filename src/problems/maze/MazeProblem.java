@@ -157,10 +157,26 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         return actions;
     }
 
+    /**
+     * Devuelve el coste de aplicar una acción sobre un estado
+     * 
+     * Todas las acciones tienen coste 1 por defecto, salvo que
+     * el num_cats de state sea 1, en cuyo caso las acciones que
+     * implican movimiento (todas excepto comer) implican coste 2
+     * @param state sobre el que se aplica la acción
+     * @param action acción a aplicar
+     * @return coste de aplicar la acción
+     */
     @Override
     public double cost(State state, Action action) {
-        // TODO Auto-generated method stub
-        return 0;
+        double cost = 1.0;
+        MazeState mazeState = (MazeState) state;
+        
+        if ( mazeState.num_cats == 1 && action != MazeAction.EAT) {
+            cost++;
+        }
+        
+        return cost;
     }
 
     @Override
