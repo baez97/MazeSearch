@@ -3,6 +3,7 @@ package problems.maze;
 import problems.maze.MazeState;
 import search.State;
 import utils.Position;
+import java.util.Set;
 
 /**
  *  Representa un estado del problema del laberinto.
@@ -14,13 +15,13 @@ public class MazeState extends State implements Cloneable{
 	
 	/** An state is includes a position given by the coordinates (x,y) */
 	public Position position;
-        public int num_cheese;
-        public int num_cats;
+        public Set<Position> eatenCheese;
+        public int numCats;
         
-        public MazeState(Position pos, int n_cheeses, int n_cats) {
-            this.position   = pos;
-            this.num_cheese = n_cheeses;
-            this.num_cats   = n_cats;
+        public MazeState(Position pos, Set<Position> eaten_cheese, int n_cats) {
+            this.position    = pos;
+            this.eatenCheese = eaten_cheese;
+            this.numCats     = n_cats;
         }
 
 	@Override
@@ -28,22 +29,26 @@ public class MazeState extends State implements Cloneable{
             MazeState another = (MazeState) anotherState;
             
             boolean pos = this.position.equals(another.position);
-            boolean che = this.num_cheese == another.num_cheese;
-            boolean cat = this.num_cats   == another.num_cats;
+            boolean che = this.eatenCheese.equals(another.eatenCheese);
+            boolean cat = this.numCats == another.numCats;
             
             return pos && che && cat;
 	}
 
 	@Override
 	public int hashCode() {
-            int hash = this.position.x * 100000 +
-                       this.position.y * 100    +
-                       this.num_cheese * 10     +
-                       this.num_cats;
-                               
+            int cheeseCounter = 6;
+            int hash = this.position.x * (10^8) + 
+                       this.position.y * (10^7) +
+                       this.numCats;
+            for ( Position cheesePos : this.eatenCheese ) {
+                hash+= cheesePos.x * (10^cheeseCounter);
+                cheeseCounter--;
+                hash+= cheesePos.y * (10^cheeseCounter);
+                cheeseCounter--;
+            }
             return hash;
-	}
-
+        }
         /**
          * Devuelve el string correspondiente a un MazeState
          * 
@@ -52,9 +57,9 @@ public class MazeState extends State implements Cloneable{
          */
 	@Override
 	public String toString() {
-            String s = "Position: " + this.position   + " | " +
-                       "Cheeses: "  + this.num_cheese + " | " +
-                       "Cats: "     + this.num_cats;
+            String s = "Position: " + this.position    + " | " +
+                       "Cheeses: "  + this.eatenCheese + " | " +
+                       "Cats: "     + this.numCats;
                 
             return s;
 	}
