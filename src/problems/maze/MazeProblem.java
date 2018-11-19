@@ -179,12 +179,20 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         return cost;
     }
 
+    /** 
+     * Comprueba si un MazeState es la meta según si su posición
+     * es la salida y se ha comido todos los quesos
+     * @param chosen MazeState que se quiere comprobar
+     * @return Booleano indicando si ese estado es (true) o no (false) la meta
+     */
     @Override
     public boolean testGoal(State chosen) {
         MazeState mazeState = (MazeState) chosen;
         
+        boolean isInOutput = mazeState.position.equals(this.maze.output());
+        boolean hasEatenCheeses = mazeState.num_cheese == NUM_CHEESES;
                 
-        return false;
+        return isInOutput && hasEatenCheeses;
     }
 
     @Override
