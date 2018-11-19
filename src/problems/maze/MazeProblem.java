@@ -11,6 +11,8 @@ import utils.Position;
 import visualization.ProblemView;
 import visualization.ProblemVisualizable;
 
+import java.util.Set;
+
 /**
  * Extends SearchProblem and implements the functions which define the maze
  * problem. Always uses three cheeses.
@@ -113,10 +115,40 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         return new MazeState(position, num_cheese, num_cats);
     }
 
+    /**
+     * Devuelve el conjunto de acciones que se pueden aplicar sobre un estado
+     *
+     * Estas acciones serán los movimientos que puede hacer según los muros que
+     * tenga el Hamnster alrededor y si hay un queso en la posición del estado 
+     * devolverá también la accion comer.
+     * 
+     * @param state Estado del que se devolverán las posibles acciones aplicables
+     * @return ArrayList de acciones tipo Action que se pueden aplicar sobre el estado.
+     */
     @Override
     public ArrayList<Action> getPossibleActions(State state) {
-        // TODO Auto-generated method stub
-        return null;
+        MazeState mazeState = (MazeState) state;
+        Position currentPosition = mazeState.position;
+        Set<Position> positions = this.maze.reachablePositions(currentPosition);
+        ArrayList<Action> actions = new ArrayList<>();
+        
+        positions.forEach((p) -> {
+            if ( p.x > currentPosition.x ) {
+                actions.add(MazeAction.RIGHT);
+            } else if ( p.x < currentPosition.x ) {
+                actions.add(MazeAction.LEFT);
+            } else if ( p.y < currentPosition.y ) {
+                actions.add(MazeAction.UP);
+            } else if ( p.y > currentPosition.y ) {
+                actions.add(MazeAction.DOWN);
+            }
+        });
+        
+        if ( this.maze.containsCheese(currentPosition) ) {
+            actions.add(MazeAction.EAT);
+        }
+        
+        return actions;
     }
 
     @Override
