@@ -16,6 +16,12 @@ public class MazeState extends State implements Cloneable{
 	public Position position;
         public int num_cheese;
         public int num_cats;
+        
+        public MazeState(Position pos, int n_cheeses, int n_cats) {
+            this.position   = pos;
+            this.num_cheese = n_cheeses;
+            this.num_cats   = n_cats;
+        }
 
 	@Override
 	public boolean equals(Object anotherState) {
