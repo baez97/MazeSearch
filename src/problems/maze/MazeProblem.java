@@ -133,20 +133,22 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
     public ArrayList<Action> getPossibleActions(State state) {
         MazeState mazeState = (MazeState) state;
         Position currentPosition = mazeState.position;
-        Set<Position> positions = this.maze.reachablePositions(currentPosition);
         ArrayList<Action> actions = new ArrayList<>();
         
-        positions.forEach((p) -> {
-            if ( p.x > currentPosition.x ) {
-                actions.add(MazeAction.RIGHT);
-            } else if ( p.x < currentPosition.x ) {
-                actions.add(MazeAction.LEFT);
-            } else if ( p.y < currentPosition.y ) {
-                actions.add(MazeAction.UP);
-            } else if ( p.y > currentPosition.y ) {
-                actions.add(MazeAction.DOWN);
-            }
-        });
+        if ( mazeState.num_cats < 2 ) {
+            Set<Position> positions = this.maze.reachablePositions(currentPosition);
+            positions.forEach((p) -> {
+                if ( p.x > currentPosition.x ) {
+                    actions.add(MazeAction.RIGHT);
+                } else if ( p.x < currentPosition.x ) {
+                    actions.add(MazeAction.LEFT);
+                } else if ( p.y < currentPosition.y ) {
+                    actions.add(MazeAction.UP);
+                } else if ( p.y > currentPosition.y ) {
+                    actions.add(MazeAction.DOWN);
+                }
+            });
+        }
         
         if ( this.maze.containsCheese(currentPosition) ) {
             actions.add(MazeAction.EAT);
