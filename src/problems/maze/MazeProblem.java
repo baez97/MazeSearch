@@ -2,6 +2,7 @@ package problems.maze;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.TreeMap;
 
 import search.State;
 import search.Action;
@@ -122,7 +123,7 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
     }
 
     /**
-     * Devuelve el conjunto de acciones que se pueden aplicar sobre un estado
+     * Devuelve el conjunto de acciones que se pueden aplicar sobre un estado.
      *
      * Estas acciones serán los movimientos que puede hacer según los muros que
      * tenga el Hamnster alrededor y si hay un queso en la posición del estado 
@@ -160,11 +161,11 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
     }
 
     /**
-     * Devuelve el coste de aplicar una acción sobre un estado
+     * Devuelve el coste de aplicar una acción sobre un estado.
      * 
      * Todas las acciones tienen coste 1 por defecto, salvo que
      * el num_cats de state sea 1, en cuyo caso las acciones que
-     * implican movimiento (todas excepto comer) implican coste 2
+     * implican movimiento (todas excepto comer) implican coste 2.
      * @param state sobre el que se aplica la acción
      * @param action acción a aplicar
      * @return coste de aplicar la acción
@@ -174,13 +175,18 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         double cost = 1.0;
         MazeState mazeState = (MazeState) state;
         
-               
+        if ( mazeState.numCats > 0 && action != MazeAction.EAT ) {
+            cost++;
+        }
+        
         return cost;
     }
 
     /** 
-     * Comprueba si un MazeState es la meta según si su posición
-     * es la salida y se ha comido todos los quesos
+     * Comprueba si un MazeState es la meta.
+     * 
+     * Comprobando si su posición es la salida y 
+     * si se ha comido todos los quesos
      * @param chosen MazeState que se quiere comprobar
      * @return Booleano indicando si ese estado es (true) o no (false) la meta
      */
@@ -189,17 +195,97 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         MazeState mazeState = (MazeState) chosen;
         
         boolean isInOutput = mazeState.position.equals(this.maze.output());
-        boolean hasEatenCheeses = mazeState.num_cheese == NUM_CHEESES;
+        boolean hasEatenCheeses = mazeState.eatenCheese.equals(this.maze.cheesePositions);
                 
         return isInOutput && hasEatenCheeses;
     }
 
+    /**
+     * Devuelve el valor de heurística.
+     * 
+     * La heuristica se calcula sumando:
+     * 1.- Distancia manhattan hasta el queso no comido más cercano.
+     * 2.- Distancia manhattan entre los quesos no comidos.
+     * 3.- Distancia desde el queso no comido más lejano hasta la meta
+     * @param state Estado del que calcula la heurística
+     * @return Valor de la heurística
+     */
     @Override
     public double heuristic(State state) {
+        double heuristic;
+        double distanceToFirstCheese;
+        double distanceBetweenCheese = 0;
+        double distanceFromLastCheese;
+        MazeState mazeState = (MazeState) state;
+        TreeMap<Integer, Position> cheeseManhattan = manhattanCheese(mazeState);
         
-        return 0;
-    }
+        if ( !cheeseManhattan.isEmpty() ) {
+            distanceToFirstCheese = manhattanDistance(mazeState.position, cheeseManhattan.firstEntry().getValue());
+            
+            // Calculando la distancia entre quesos (distanceBetweenCheese)
+            // -> Como en la primera iteración solo hay un queso y para calcular
+            //    la distancia necesito 2, utilizo una posición negativa para que
+            //    el método de manhattanDistance devuelva 0
+            // -> La variable last me permite almacenar la posición del último queso
+            //    que compruebo, que la necesito para calcular la distancia desde éste
+            //    hasta la meta. 
+            Position previous = new Position(-1, -1); 
+            Position last     = new Position(-1, -1);
 
+            for ( Position cheesePos : cheeseManhattan.values() ) {
+                last = cheesePos;
+                distanceBetweenCheese += manhattanDistance(previous, last);
+                previous = cheesePos;
+            }
+            
+            distanceFromLastCheese = manhattanDistance(last, this.maze.output());
+            
+            heuristic = distanceToFirstCheese +
+                        distanceBetweenCheese +
+                        distanceFromLastCheese;
+        } else {
+            heuristic = manhattanDistance(mazeState.position, this.maze.output());
+        }
+        
+        return heuristic;
+    }
+    
+    /**
+     * Devuelve la distancia manhattan entre dos objetos Posición.
+     * Devuelve 0 si la posición inicial contiene un valor negativo en la x.
+     * 
+     * @param initial posición inicial
+     * @param objective posición final
+     * @return valor de la distancia manhattan
+     */
+    public int manhattanDistance(Position initial, Position objective) {
+        int distance = 0;
+        if ( initial.x >= 0 ) {
+            distance = Math.abs(initial.x - objective.x) +
+                       Math.abs(initial.y - objective.y);
+        }
+        return distance;
+    }
+    
+    /**
+     * Devuelve las posiciones de los quesos no comidos ordenadas por
+     * distancia a la posición del Hamster en el estado mazeState.
+     * @param mazeState estado actual
+     * @return TreeMap con la distancia manhattan como clave
+     */
+    public TreeMap<Integer, Position> manhattanCheese(MazeState mazeState) {
+        TreeMap<Integer,Position> manhatCheese = new TreeMap<>();
+        int distance;
+        for ( Position p : this.maze.cheesePositions ) {
+            if (!mazeState.eatenCheese.contains(p)) {
+                distance = manhattanDistance(p, mazeState.position);
+                manhatCheese.put(distance, p);
+            }
+        }
+        return manhatCheese;
+    }
+    
+     
     // VISUALIZATION
     /**
      * Returns a panel with the view of the problem.
