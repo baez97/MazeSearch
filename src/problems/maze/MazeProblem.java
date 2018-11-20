@@ -52,6 +52,7 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
                 size = Integer.parseInt(args[0]);
                 cats = Integer.parseInt(args[1]);
                 seed = Integer.parseInt(args[2]);
+                System.out.println("Size: " + size + " | Seed: " + seed + " | Cats: " + cats);
             } catch (Exception e) {
                 System.out.println("Parameters for MazeProblem are incorrect.");
                 return;
@@ -89,20 +90,20 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
     public State applyAction(State state, Action action) {
         MazeState  mazeState  = (MazeState)  state;
         MazeAction mazeAction = (MazeAction) action;
-        Set<Position> eatenCheese; 
+        Set<Position> eatenCheese = new HashSet<>(); 
         int numCats;
         Position position;
         
-        eatenCheese = mazeState.eatenCheese;
+        eatenCheese.addAll(mazeState.eatenCheese);
         numCats     = mazeState.numCats;
-        position    = mazeState.position;        
+        position    = new Position(mazeState.position.asVector());
         
         switch( mazeAction ) {
             case UP:
-                position = new Position(position.x, position.y +1);
+                position = new Position(position.x, position.y -1);
                 break;
             case DOWN:
-                position = new Position(position.x, position.y -1);
+                position = new Position(position.x, position.y +1);
                 break;
             case RIGHT:
                 position = new Position(position.x +1, position.y);
@@ -140,20 +141,23 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         
         if ( mazeState.numCats < 2 ) {
             Set<Position> positions = this.maze.reachablePositions(currentPosition);
-            positions.forEach((p) -> {
-                if ( p.x > currentPosition.x ) {
-                    actions.add(MazeAction.RIGHT);
-                } else if ( p.x < currentPosition.x ) {
-                    actions.add(MazeAction.LEFT);
-                } else if ( p.y < currentPosition.y ) {
-                    actions.add(MazeAction.UP);
-                } else if ( p.y > currentPosition.y ) {
-                    actions.add(MazeAction.DOWN);
-                }
-            });
+            
+            if ( positions != null ) {
+                positions.forEach((p) -> {
+                    if ( p.x > currentPosition.x ) {
+                        actions.add(MazeAction.RIGHT);
+                    } else if ( p.x < currentPosition.x ) {
+                        actions.add(MazeAction.LEFT);
+                    } else if ( p.y < currentPosition.y ) {
+                        actions.add(MazeAction.UP);
+                    } else if ( p.y > currentPosition.y ) {
+                        actions.add(MazeAction.DOWN);
+                    }
+                });
+            }
         }
         
-        if ( this.maze.containsCheese(currentPosition) ) {
+        if ( this.maze.containsCheese(currentPosition) && mazeState.eatenCheese.size() < 3) {
             actions.add(MazeAction.EAT);
         }
         
@@ -195,9 +199,14 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         MazeState mazeState = (MazeState) chosen;
         
         boolean isInOutput = mazeState.position.equals(this.maze.output());
-        boolean hasEatenCheeses = mazeState.eatenCheese.equals(this.maze.cheesePositions);
-                
-        return isInOutput && hasEatenCheeses;
+        boolean hasEatenCheese = true;
+        for ( Position cheese : this.maze.cheesePositions ) {
+            if (!mazeState.eatenCheese.contains(cheese)) {
+                hasEatenCheese = false;
+            }
+        }
+                        
+        return isInOutput && hasEatenCheese;
     }
 
     /**
