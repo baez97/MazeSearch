@@ -7,6 +7,7 @@ package algorithms;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Queue;
 import problems.maze.MazeState;
 import search.Action;
 import search.Node;
@@ -16,7 +17,7 @@ import search.SearchAlgorithm;
  *
  * @author josemanuelbaezsoriano
  */
-public class BreathFirst extends ParentAlgorithm {
+public class DepthFirst extends ParentAlgorithm {
     
     @Override
     public void setParams(String[] params) {
@@ -25,7 +26,7 @@ public class BreathFirst extends ParentAlgorithm {
 
     @Override
     public Node obtenerNodo() {
-        return ((LinkedList<Node>) this.frontera).removeFirst();
+        return ((LinkedList<Node>) this.frontera).removeLast();
     }
     
     @Override
