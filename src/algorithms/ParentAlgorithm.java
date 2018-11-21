@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package algorithms;
 
 import java.util.ArrayList;
@@ -10,10 +5,6 @@ import java.util.Collection;
 import search.Node;
 import search.SearchAlgorithm;
 
-/**
- *
- * @author josemanuelbaezsoriano
- */
 public abstract class ParentAlgorithm extends SearchAlgorithm {
     
     Collection<Node> frontera;
@@ -47,7 +38,12 @@ public abstract class ParentAlgorithm extends SearchAlgorithm {
         
     }
     
-    public abstract void insertarEnFrontera(Node n);
+    public void insertarEnFrontera(Node n) {
+        int openSize = this.frontera.size();
+        if ( openSize > this.openMaxSize )
+            this.openMaxSize = openSize;
+        frontera.add(n);
+    }
     
     public boolean fronteraVacia() {
         return this.frontera.isEmpty();
