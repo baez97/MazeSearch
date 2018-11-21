@@ -116,7 +116,7 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
                 break;
         }
         
-        if ( this.maze.containsCat(position) ) {
+        if ( this.maze.containsCat(position) && !mazeState.position.equals(position)) {
             numCats++;
         }
         
@@ -142,7 +142,7 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         if ( mazeState.numCats < 2 ) {
             Set<Position> positions = this.maze.reachablePositions(currentPosition);
             
-            if ( positions != null ) {
+            if ( !positions.isEmpty() ) {
                 positions.forEach((p) -> {
                     if ( p.x > currentPosition.x ) {
                         actions.add(MazeAction.RIGHT);
@@ -155,13 +155,15 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
                     }
                 });
             }
-        }
         
-        if ( this.maze.containsCheese(currentPosition) && mazeState.eatenCheese.size() < 3) {
-            actions.add(MazeAction.EAT);
-        }
+            if ( this.maze.containsCheese(currentPosition) && !mazeState.eatenCheese.contains(currentPosition)) {
+                actions.add(MazeAction.EAT);
+            }
         
-        return actions;
+            return actions;
+        } else {
+            return new ArrayList();
+        }
     }
 
     /**

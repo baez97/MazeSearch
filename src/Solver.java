@@ -1,5 +1,9 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import search.SearchAlgorithm;
 import search.SearchProblem;
@@ -33,6 +37,14 @@ public class Solver {
 
 		// Sets the problem
 		algorithm.setProblem(problem);
+                
+//                ProblemVisualization problemVisualization = new ProblemVisualization(problem, sizePx);
+//		problemVisualization.visualize(problem.initialState(), new ArrayList<>());		
+//		// Waits five seconds and closes.
+//		try {
+//			Thread.sleep(5000);
+//		}catch (InterruptedException e){}
+//		problemVisualization.close();
 		// Carries out the search.
 		algorithm.search();
 		

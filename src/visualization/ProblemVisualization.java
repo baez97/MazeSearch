@@ -65,6 +65,7 @@ public class ProblemVisualization{
 		view.setState(currentState);
 		// Iterates over the actions
 		for (Action action: actionSequence){
+                    System.out.println("currentState => " + currentState + " | action => " + action);
 			// Generates the new state
 			newState = problem.applyAction(currentState, action);
 			// Visualizes the action from the current state to the newState
@@ -83,7 +84,7 @@ public class ProblemVisualization{
 	public static void main(String[] args) {
 		// Uses an instance of MazeProblem as example
 		problems.maze.MazeProblem problem = new problems.maze.MazeProblem(10, 0, 4);
-		problems.maze.MazeState initialState = new problems.maze.MazeState(5,3);
+		problems.maze.MazeState initialState = (problems.maze.MazeState) problem.initialState();
 		ArrayList<Action> actions = new ArrayList<Action>();
 		actions.add(problems.maze.MazeAction.RIGHT);
 		actions.add(problems.maze.MazeAction.RIGHT);
