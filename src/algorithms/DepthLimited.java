@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package algorithms;
 
 import java.util.LinkedList;
 import search.Node;
 
-/**
- *
- * @author josemanuelbaezsoriano
- */
 public class DepthLimited extends DepthFirst{
 
     int limite; 
@@ -47,11 +38,6 @@ public class DepthLimited extends DepthFirst{
     public void setParams(String[] params) {
         this.frontera = new LinkedList<>();
         this.limite = Integer.parseInt(params[0]);
-    }
-    
-    // Método auxiliar para IterativeDeepening
-    public void setLimite(int l) {
-        this.limite = l;
     }
     
 }

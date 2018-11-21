@@ -22,6 +22,9 @@ import utils.Position;
 
 /** Shows a maze */
 public class MazeView extends ProblemView{
+    
+        // Ruta de la carpeta imgs acabada en / o en // para que cuadren las rutas de las líneas 38 a la 42
+        private static String rutaImgs = "/Users/josemanuelbaezsoriano/NetBeansProjects/Practica1/src/problems/maze/imgs/";
 	
 	// Colors
 	private static Color boundsColor = new Color(200,200,200);
@@ -32,11 +35,11 @@ public class MazeView extends ProblemView{
 	private static Color waterColor = new Color(34, 79, 189);
 	
 	// Images
-	public static final Image hamster = Toolkit.getDefaultToolkit().getImage("/Users/josemanuelbaezsoriano/NetBeansProjects/Practica1/src/problems/maze/imgs/hamster.png");
-	public static final Image hamster2 = Toolkit.getDefaultToolkit().getImage("/Users/josemanuelbaezsoriano/NetBeansProjects/Practica1/src/problems/maze/imgs/hamster2.png");
-	public static final Image cheese = Toolkit.getDefaultToolkit().getImage("/Users/josemanuelbaezsoriano/NetBeansProjects/Practica1/src/problems/maze/imgs/queso.png");	
-	public static final Image cat = Toolkit.getDefaultToolkit().getImage("/Users/josemanuelbaezsoriano/NetBeansProjects/Practica1/src/problems/maze/imgs/cat.png");
-	public static final Image cat2 = Toolkit.getDefaultToolkit().getImage("/Users/josemanuelbaezsoriano/NetBeansProjects/Practica1/src/problems/maze/imgs/cat2.png");
+	public static final Image hamster = Toolkit.getDefaultToolkit().getImage(rutaImgs + "hamster.png");
+	public static final Image hamster2 = Toolkit.getDefaultToolkit().getImage(rutaImgs + "hamster2.png");
+	public static final Image cheese = Toolkit.getDefaultToolkit().getImage(rutaImgs + "queso.png");	
+	public static final Image cat = Toolkit.getDefaultToolkit().getImage(rutaImgs + "cat.png");
+	public static final Image cat2 = Toolkit.getDefaultToolkit().getImage(rutaImgs + "cat2.png");
 	// Image of the maze
 	BufferedImage mazeImage;		
 	// Scaled images
@@ -67,7 +70,7 @@ public class MazeView extends ProblemView{
 		cellSizePx = (sizePx-40) / mazeProblem.maze.size;
 		marginPx = (sizePx - cellSizePx * mazeProblem.maze.size)/2;
 		boundWidthPx = marginPx/2;
-		speedPx = (cellSizePx*2)/20;	// pixels each 1/20 second  (Four cells/second)	
+		speedPx = (cellSizePx*4)/20;	// pixels each 1/20 second  (Four cells/second)	
 		
 		// Scales the images according to the size
 		scaledHamster = hamster.getScaledInstance((int)(cellSizePx*0.5), (int)(cellSizePx*0.5), Image.SCALE_SMOOTH);

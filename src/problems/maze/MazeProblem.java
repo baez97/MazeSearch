@@ -181,7 +181,7 @@ public class MazeProblem implements SearchProblem, ProblemVisualizable {
         double cost = 1.0;
         MazeState mazeState = (MazeState) state;
         
-        if ( mazeState.numCats > 0 && action != MazeAction.EAT ) {
+        if ( mazeState.numCats > 0 ) {
             cost++;
         }
         

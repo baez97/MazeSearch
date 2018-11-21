@@ -65,7 +65,6 @@ public class ProblemVisualization{
 		view.setState(currentState);
 		// Iterates over the actions
 		for (Action action: actionSequence){
-                    System.out.println("currentState => " + currentState + " | action => " + action);
 			// Generates the new state
 			newState = problem.applyAction(currentState, action);
 			// Visualizes the action from the current state to the newState
