@@ -19,6 +19,7 @@ import search.SearchAlgorithm;
 public class BreathFirst extends SearchAlgorithm {
     
     LinkedList<Node> frontera = new LinkedList<>();
+    LinkedList<Node> cerrados = new LinkedList<>();
     Node currentNode;
 
     @Override
@@ -36,15 +37,19 @@ public class BreathFirst extends SearchAlgorithm {
         while( !solutionFound && !frontera.isEmpty()) {
             
             currentNode = frontera.removeFirst();
+            this.cerrados.add(currentNode);
             
             if ( this.problem.testGoal(currentNode.getState()) ) {
                 this.establecerSolucion(currentNode);
                 solutionFound = true;
             }
             
-            if ( !(successors = this.getSuccessors(currentNode)).isEmpty() ) {
-                this.frontera.addAll(successors);
-            } 
+            successors = this.getSuccessors(currentNode);
+            for (Node s : successors) {
+                if ( !cerrados.contains(s) ){
+                    this.frontera.add(s);
+                }
+            }
         } 
     }
     
